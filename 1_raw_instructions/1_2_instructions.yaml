@@ -1,5 +1,5 @@
-base_model: google/gemma-2b
-model_type: GemmaForCausalLM
+base_model: beomi/Llama-3-Open-Ko-8B
+model_type: LlamaForCausalLM
 tokenizer_type: AutoTokenizer
 
 load_in_8bit: false
@@ -7,38 +7,40 @@ load_in_4bit: false
 strict: false
 
 datasets:
-  - path: heegyu/korean-petitions
-    type: completion
-    field: content
+  - path: sigridjineth/instructions-ko-small
+    type: sharegpt
+    conversation: chatml
     
 unfrozen_parameters:
-  - model.layers.2[0-9].*
-  - model.layers.3[0-9].*
+  - model.layers.28.*
+  - model.layers.29.*
+  - model.layers.30.*
+  - model.layers.31.*
 
 dataset_prepared_path:
-val_set_size: 0.0
-output_dir: ./layer_locked_raw_petitions
+val_set_size: 0.001
+output_dir: ./llama3-20240427-experimental-layer-locked-inst
 lora_model_dir:
 
-sequence_len: 8192
-sample_packing: true
+sequence_len: 4096
+sample_packing: false
 pad_to_sequence_len: false
 
-wandb_project: gemma
+wandb_project: 1_raw_instructions
 wandb_entity:
 wandb_watch:
-wandb_name: layer_locked_raw_petitions
+wandb_name: llama3-20240427-experimental-layer-locked-inst
 wandb_log_model:
 
 gradient_checkpointing_kwargs:
   use_reentrant: false
 
-gradient_accumulation_steps: 1
-micro_batch_size: 4
+gradient_accumulation_steps: 16
+micro_batch_size: 8
 num_epochs: 3
 optimizer: adamw_torch
 lr_scheduler: cosine
-learning_rate: 0.00001
+learning_rate: 0.00004
 
 train_on_inputs: false
 group_by_length: false
@@ -54,14 +56,14 @@ logging_steps: 1
 xformers_attention:
 flash_attention: true
 
-warmup_steps: 4
+warmup_steps: 10
 evals_per_epoch: 8
 eval_sample_packing: false
 save_total_limit: 12
-saves_per_epoch: 1
+saves_per_epoch: 2
 debug: true
-deepspeed: /workspace/axolotl/deepspeed_configs/zero2.json
-weight_decay: 0.2
+# deepspeed: ./axolotl/deepspeed_configs/zero2.json
+weight_decay: 0
 fsdp:
 fsdp_config:
 special_tokens:

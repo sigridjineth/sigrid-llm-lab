@@ -1,0 +1,93 @@
+base_model: beomi/Llama-3-Open-Ko-8B
+model_type: LlamaForCausalLM
+tokenizer_type: AutoTokenizer
+
+load_in_8bit: false
+load_in_4bit: false
+strict: false
+
+datasets:
+  - path: sieu-n/korean-newstext-dump
+    type: completion
+    field: text
+    
+unfrozen_parameters:
+  - model.layers.0.*
+  - model.layers.1.*
+  - model.layers.2.*
+  - model.layers.3.*
+  - model.layers.4.*
+  - model.layers.5.*
+  - model.layers.6.*
+  - model.layers.7.*
+  - model.layers.8.*
+  - model.layers.9.*
+  - model.layers.10.*
+  - model.layers.11.*
+  - model.layers.12.*
+  - model.layers.13.*
+  - model.layers.14.*
+  - model.layers.15.*
+  - model.layers.16.*
+  - model.layers.17.*
+  - model.layers.18.*
+  - model.layers.19.*
+  - model.layers.20.*
+  - model.layers.21.*
+  - model.layers.22.*
+  - model.layers.23.*
+  - model.layers.24.*
+  - model.layers.25.*
+  - model.layers.26.*
+  - model.layers.27.*
+
+dataset_prepared_path:
+val_set_size: 0.0
+output_dir: ./llama3-20240427-experimental-layer-locked-raw
+lora_model_dir:
+
+sequence_len: 4096
+sample_packing: true
+pad_to_sequence_len: false
+
+wandb_project: 1_raw_instructions
+wandb_entity:
+wandb_watch:
+wandb_name: llama3-20240427-experimental-layer-locked-raw
+wandb_log_model:
+
+gradient_checkpointing_kwargs:
+  use_reentrant: false
+
+gradient_accumulation_steps: 1
+micro_batch_size: 4
+num_epochs: 3
+optimizer: adamw_torch
+lr_scheduler: cosine
+learning_rate: 0.00001
+
+train_on_inputs: false
+group_by_length: false
+bf16: auto
+fp16:
+tf32: false
+
+gradient_checkpointing: true
+early_stopping_patience:
+resume_from_checkpoint:
+local_rank:
+logging_steps: 1
+xformers_attention:
+flash_attention: true
+
+warmup_steps: 4
+evals_per_epoch: 8
+eval_sample_packing: false
+save_total_limit: 12
+saves_per_epoch: 1
+debug: true
+# deepspeed: /workspace/axolotl/deepspeed_configs/zero2.json
+weight_decay: 0.2
+fsdp:
+fsdp_config:
+special_tokens:
